@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GIRA | Alquiler de vehículos</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Estilos para la pantalla de inicio de sesión */
+    .auth-overlay {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+      background-color: var(--bg-color, #f4f5f7);
+    }
+    .auth-card {
+      max-width: 400px;
+      width: 100%;
+    }
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PANTALLA DE INICIO DE SESIÓN -->
+  <div id="loginSection" class="auth-overlay">
+    <div class="panel auth-card">
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <a class="brand" href="#" style="font-size: 1.8rem;"><b>G</b> GIRA</a>
+        <p style="margin-top: 0.5rem; color: #666;">Ingresa con tus credenciales para acceder al sistema</p>
+      </div>
+
+      <form id="loginForm">
+        <label for="loginUser">Usuario o Correo</label>
+        <input id="loginUser" type="text" placeholder="Ej. admin" required>
+
+        <label for="loginPassword">Contraseña</label>
+        <input id="loginPassword" type="password" placeholder="••••••••" required>
+
+        <button type="submit" class="primary full" style="margin-top: 1rem;">Iniciar Sesión →</button>
+      </form>
+
+      <div id="loginMsg" class="notice hidden" style="margin-top: 1rem;"></div>
+      
+      <p class="hint" style="text-align: center; margin-top: 1rem;">
+        <strong>Credenciales demo:</strong><br>
+        Usuario: <code>admin</code> | Contraseña: <code>12345678</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PROTEGIDO (Sidebar + Main) -->
+  <div id="appContent" class="hidden">
+    <aside class="sidebar">
+      <a class="brand" href="#"><b>G</b> GIRA</a>
+      <small class="muted">MENÚ PRINCIPAL</small>
+      <button data-go="catalogo">▦ Catálogo</button>
+      <button data-go="calculadora">◷ Calcular alquiler</button>
+      <button data-go="registro">＋ Crear cuenta</button>
+      <button id="logoutBtn" style="margin-top: auto; color: #e53e3e;">✕ Cerrar sesión</button>
+      <div class="sidefoot">● <span>GIRA<br><small>Gestión de vehículos</small></span></div>
+    </aside>
+
+    <main>
+      <header>
+        <div class="mobile">▰ GIRA</div>
+        <span id="connection">● Modo demostración</span>
+        <a href="#registro" class="avatar">DR</a>
+      </header>
+
+      <section class="hero">
+        <div>
+          <small class="eyebrow">TU PRÓXIMO DESTINO EMPIEZA AQUÍ</small>
+          <h1>Encuentra el vehículo<br>ideal para <em>tu camino.</em></h1>
+          <p>Explora opciones, consulta disponibilidad y calcula el valor de tu alquiler en un solo lugar.</p>
+          <button class="primary" onclick="document.querySelector('#catalogo').scrollIntoView({behavior:'smooth'})">Explorar vehículos ↗</button>
+        </div>
+        <div class="hero-art">
+          <div class="orb"></div>
+          <div class="car">GR</div>
+          <div class="float">✦ <strong>Tu viaje, tus reglas</strong><small> Elige y calcula fácilmente</small></div>
+        </div>
+      </section>
+
+      <section id="catalogo">
+        <div class="section-head">
+          <div>
+            <small class="eyebrow">NUESTRA FLOTA</small>
+            <h2>Vehículos disponibles</h2>
+            <p>Encuentra el que se adapta a tus planes.</p>
+          </div>
+          <div class="filters">
+            <input id="search" placeholder="Buscar vehículo...">
+            <select id="type">
+              <option value="todos">Todos los tipos</option>
+              <option>Automovil</option>
+              <option>Camioneta</option>
+              <option>Motocicleta</option>
+            </select>
+          </div>
+        </div>
+        <div id="notice" class="notice hidden"></div>
+        <div id="vehicles" class="grid"></div>
+        <p id="empty" class="muted hidden">No encontramos vehículos con esos filtros.</p>
+      </section>
+
+      <section id="calculadora" class="split">
+        <div>
+          <small class="eyebrow">COTIZA EN SEGUNDOS</small>
+          <h2>Calcula tu alquiler.</h2>
+          <p>Selecciona un vehículo y la cantidad de días. Calcularemos el valor estimado con la tarifa diaria.</p>
+        </div>
+        <form id="rentForm" class="panel">
+          <label for="vehicle">Vehículo</label>
+          <select id="vehicle" required>
+            <option value="">Selecciona un vehículo</option>
+          </select>
+          <label for="days">Duración del alquiler (días)</label>
+          <input id="days" type="number" min="1" max="365" value="1" required>
+          <div class="total">
+            <span>Valor estimado</span>
+            <strong id="total">$0</strong>
+          </div>
+          <button class="primary full" type="submit">Calcular alquiler</button>
+          <p class="hint">En modo demostración no se crea un alquiler real.</p>
+          <div id="rentMsg" class="notice hidden"></div>
+        </form>
+      </section>
+
+      <section id="registro" class="split register">
+        <div>
+          <small class="eyebrow">ÚNETE A GIRA</small>
+          <h2>Crea tu cuenta.</h2>
+          <p>Registra tus datos para iniciar tu experiencia de alquiler.</p>
+        </div>
+        <form id="registerForm" class="panel">
+          <label>Nombre completo</label>
+          <input id="name" required placeholder="Ej. Laura Pérez">
+          <label>Documento</label>
+          <input id="document" required placeholder="Número de documento">
+          <label>Correo electrónico</label>
+          <input id="email" type="email" required placeholder="tu@correo.com">
+          <label>Teléfono</label>
+          <input id="phone" required placeholder="Número de contacto">
+          <label>Contraseña</label>
+          <input id="password" type="password" minlength="8" required placeholder="Mínimo 8 caracteres">
+          <button class="primary full" type="submit">Crear cuenta →</button>
+          <p class="hint">No uses una contraseña real mientras el backend no esté configurado.</p>
+          <div id="registerMsg" class="notice hidden"></div>
+        </form>
+      </section>
+
+      <footer>
+        <a class="brand" href="#"><b>G</b> GIRA</a>
+        <span>Movilidad sencilla. Decisiones inteligentes.</span>
+        <span>© 2026 GIRA</span>
+      </footer>
+    </main>
+  </div>
+
+  <!-- SCRIPT DE LOGIC DE AUTENTICACIÓN -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginForm = document.getElementById("loginForm");
+      const loginSection = document.getElementById("loginSection");
+      const appContent = document.getElementById("appContent");
+      const loginMsg = document.getElementById("loginMsg");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      // Credenciales de demostración
+      const DEMO_USER = "admin";
+      const DEMO_PASS = "12345678";
+
+      // Validar Inicio de Sesión
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const userInput = document.getElementById("loginUser").value.trim();
+        const passInput = document.getElementById("loginPassword").value.trim();
+
+        if (userInput === DEMO_USER && passInput === DEMO_PASS) {
+          // Exitoso: ocultar login y mostrar inventario
+          loginSection.classList.add("hidden");
+          appContent.classList.remove("hidden");
+          loginMsg.classList.add("hidden");
+        } else {
+          // Error: credenciales incorrectas
+          loginMsg.textContent = "Usuario o contraseña incorrectos.";
+          loginMsg.classList.remove("hidden");
+        }
+      });
+
+      // Cerrar Sesión
+      logoutBtn.addEventListener("click", () => {
+        appContent.classList.add("hidden");
+        loginSection.classList.remove("hidden");
+        loginForm.reset();
+      });
+    });
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
